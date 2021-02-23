@@ -2,11 +2,8 @@
 {{ define "main" }}
 <br>
 {{ range .}}
-<div class="text">
-    {{.Name}} - {{.Price}}
-        {{if lt .Stock 3}}
-            Stock almost run out
-        {{end}}
+<div class="text box-with-shadow">
+    {{.Name}} - {{.Price}} - {{.StockStatus}}
 </div>    
 {{end}}
 <br>

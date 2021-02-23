@@ -54,9 +54,9 @@ func ProductHandler(w http.ResponseWriter, r *http.Request) {
 
 	// data2 := entity.Product{ID: 1, Name: "Macbook Pro M1", Price: 22000000, Stock: 2}
 	data2 := []entity.Product{
-		{ID: 1, Name: "Macbook Pro M1", Price: 22000000, Stock: 2},
-		{ID: 2, Name: "Macbook Air M1", Price: 17000000, Stock: 3},
-		{ID: 3, Name: "Macbook 2012", Price: 7000000, Stock: 1},
+		{ID: 1, Name: "Macbook Pro M1", Price: 22000000, Stock: 8},
+		{ID: 2, Name: "Macbook Air M1", Price: 17000000, Stock: 2},
+		{ID: 3, Name: "Macbook 2012", Price: 7000000, Stock: 11},
 	}
 	id := r.URL.Query().Get("id")
 	if id == "" {
@@ -78,3 +78,5 @@ func ProductHandler(w http.ResponseWriter, r *http.Request) {
 	// }
 
 }
+
+
