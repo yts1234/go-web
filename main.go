@@ -4,15 +4,18 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/yts1234/go-web/handler"
+	"github.com/yts1234/go-web/handler/httphandler"
+	"github.com/yts1234/go-web/handler/jwthandler"
 )
 
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", handler.HomeHandler)
-	mux.HandleFunc("/helo", handler.HelloHandler)
-	mux.HandleFunc("/product", handler.ProductHandler)
+	mux.HandleFunc("/", httphandler.HomeHandler)
+	mux.HandleFunc("/helo", httphandler.HelloHandler)
+	mux.HandleFunc("/product", httphandler.ProductHandler)
+	mux.HandleFunc("/welcome", httphandler.WelcomeHandler)
+	mux.HandleFunc("/signin", jwthandler.Signin)
 
 	fileServer := http.FileServer(http.Dir("assets"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))

@@ -1,11 +1,14 @@
-package handler
+package httphandler
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/yts1234/go-web/entity"
+	"github.com/yts1234/go-web/handler/jwthandler"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -79,4 +82,42 @@ func ProductHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			log.Print("Error: User cookie is not set")
+			http.Error(w, "401 Unathorized", http.StatusUnauthorized)
+			// w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		log.Print("Error: ", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
+	tknStr := c.Value
+
+	claims := &jwthandler.Claims{}
+
+	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret_key"), nil
+	})
+
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			log.Print("Error: Signature is invalid ", err)
+			http.Error(w, "Signature is invalid ", http.StatusUnauthorized)
+			return
+		}
+		log.Print("Error: ", err)
+		http.Error(w, "Bad Request ", http.StatusBadRequest)
+		return
+	}
+	if !tkn.Valid {
+		log.Print("Error: Token invalid ", err)
+		http.Error(w, "Token is invalid ", http.StatusUnauthorized)
+		return
+	}
+	w.Write([]byte(fmt.Sprintf("Welcome %s!", claims.Username)))
+}
