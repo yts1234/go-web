@@ -6,6 +6,7 @@ import (
 
 	"github.com/yts1234/go-web/handler/httphandler"
 	"github.com/yts1234/go-web/handler/jwthandler"
+	"github.com/yts1234/go-web/handler/pasetohandler"
 )
 
 func main() {
@@ -16,6 +17,8 @@ func main() {
 	mux.HandleFunc("/product", httphandler.ProductHandler)
 	mux.HandleFunc("/welcome", httphandler.WelcomeHandler)
 	mux.HandleFunc("/signin", jwthandler.Signin)
+	mux.HandleFunc("/pasetosignin", pasetohandler.PasetoSignIn)
+	mux.HandleFunc("/welcomepaseto", httphandler.WelcomePaseto)
 
 	fileServer := http.FileServer(http.Dir("assets"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))

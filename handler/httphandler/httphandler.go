@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/o1egl/paseto"
 	"github.com/yts1234/go-web/entity"
 	"github.com/yts1234/go-web/handler/jwthandler"
 )
@@ -120,4 +121,40 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write([]byte(fmt.Sprintf("Welcome %s!", claims.Username)))
+}
+
+func WelcomePaseto(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("pasetoToken")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			log.Print("Error: User cookie is not set, ", err)
+			http.Error(w, "401 Unathorized", http.StatusUnauthorized)
+			// w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		log.Print("Error: ", err)
+		http.Error(w, "Error is happening in our side, rest easy", http.StatusInternalServerError)
+		return
+	}
+	tknStr := c.Value
+
+	var newJsonToken paseto.JSONToken
+	var newFooter string
+	err = paseto.NewV2().Decrypt(tknStr, []byte("YELLOW SUBMARINE, BLACK WIZARDRY"), &newJsonToken, &newFooter)
+	if err != nil {
+		if err == paseto.ErrInvalidSignature {
+			log.Print("Error invalid: ", err)
+			http.Error(w, "401 Unauthorized", http.StatusUnauthorized)
+			return
+		} else if err == paseto.ErrTokenValidationError {
+			log.Print("Error invalid: ", err)
+			http.Error(w, "401 Unauthorized", http.StatusUnauthorized)
+			return
+		} else {
+			log.Print("Error: ", err)
+			http.Error(w, "400 Bad Request", http.StatusBadRequest)
+			return
+		}
+	}
+	w.Write([]byte(fmt.Sprintf("Welcome %s! from: %s", newJsonToken.Audience, newFooter)))
 }
