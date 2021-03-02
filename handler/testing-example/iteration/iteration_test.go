@@ -23,6 +23,9 @@ func TestRepeat(t *testing.T) {
 	})
 }
 
-// func BenchmarkRepeat(b *testing.B) {
-// 	Repeat("a", 0)
-// }
+func BenchmarkRepeat(b *testing.B) {
+	//b.N = 1
+	for i := 0; i < b.N; i++ {
+		Repeat("a", 1000)
+	}
+}
