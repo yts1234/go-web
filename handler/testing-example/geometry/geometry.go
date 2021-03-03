@@ -19,6 +19,15 @@ func (c Circle) Area() float64 {
 	return math.Pi * c.Radius * c.Radius
 }
 
+type Triangle struct {
+	base   float64
+	height float64
+}
+
+func (t Triangle) Area() float64 {
+	return (t.base * t.height) * 0.5
+}
+
 type Shape interface {
 	Area() float64
 }

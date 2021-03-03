@@ -31,6 +31,7 @@ func TestArea(t *testing.T) {
 
 //  Table Driven Test
 func TestTableArea(t *testing.T) {
+	// Test helper function
 	checkArea := func(t testing.TB, shape Shape, want float64) {
 		t.Helper()
 		got := shape.Area()
@@ -38,12 +39,14 @@ func TestTableArea(t *testing.T) {
 			t.Errorf("got %g want %g", got, want)
 		}
 	}
+	// areaTests is table driven test implementation
 	areaTests := []struct {
 		shape Shape
 		want  float64
 	}{
-		{Rectangle{12, 6}, 72.0},
-		{Circle{10}, 314.1592653589793},
+		{shape: Rectangle{Width: 12, Height: 6}, want: 72.0},
+		{shape: Circle{Radius: 10}, want: 314.1592653589793},
+		{shape: Triangle{base: 12, height: 6}, want: 36.0},
 	}
 	for _, tt := range areaTests {
 		// got := tt.shape.Area()
